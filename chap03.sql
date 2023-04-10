@@ -2,13 +2,13 @@ select bookname
 from book
 where bookid=1;
 
-/*°¡°İÀÌ 2¸¸¿ø ÀÌ»óÀÎ µµ¼­ ÀÌ¸§*/
+/*ê°€ê²©ì´ 2ë§Œì› ì´ìƒì¸ ë„ì„œ ì´ë¦„*/
 
 SELECT bookname
 FROM book
 where price>=20000;
 
-/*¹ÚÁö¼ºÀÇ ÃÑ ±¸¸Å ±İ¾×*/
+/*ë°•ì§€ì„±ì˜ ì´ êµ¬ë§¤ ê¸ˆì•¡*/
 
 SELECT SUM(saleprice)
 FROM orders
@@ -16,14 +16,40 @@ where custid=1;
 
 SELECT SUM(saleprice)
 FROM Customer, orders
-where Customer.custid=orders.custid AND Customer.name LIKE '¹ÚÁö¼º';
+where Customer.custid=orders.custid AND Customer.name LIKE 'ë°•ì§€ì„±';
 
-/*¹ÚÁö¼ºÀÌ ±¸¸ÅÇÑ µµ¼­ÀÇ ¼ö*/
+/*ë°•ì§€ì„±ì´ êµ¬ë§¤í•œ ë„ì„œì˜ ìˆ˜*/
 SELECT COUNT(*)
 FROM Customer, Orders
-where Customer.custid=Orders.custid AND Customer.name LIKE '¹ÚÁö¼º';
+where Customer.custid=Orders.custid AND Customer.name LIKE 'ë°•ì§€ì„±';
 
-/*¹ÚÁö¼ºÀÌ ±¸¸ÅÇÑ Ã¥ÀÇ ¼ö*/
+/*ë°•ì§€ì„±ì´ êµ¬ë§¤í•œ ì±…ì˜ ìˆ˜*/
 SELECT COUNT(publisher)
 FROM Book, Customer, Orders
-WHERE Book.bookid=Orders.bookid AND Customer.custid=Orders.custid AND Customer.name LIKE '¹ÚÁö¼º';
+WHERE Book.bookid=Orders.bookid AND Customer.custid=Orders.custid AND Customer.name LIKE 'ë°•ì§€ì„±';
+
+/*ch03,exl-5*/
+select count(distinct publisher) 
+from customer, orders,book 
+where customer.custid=orders.custid
+	and orders.bookid=book.bookid
+	and customer.name like 'ë°•ì§€ì„±';
+
+
+/*ch03,exl-6*/
+select bookname,price,price-salprice
+from customer, orders,book 
+where customer.custid=orders.custid
+	and orders.bookid=book.bookid
+	and customer.name like 'ë°•ì§€ì„±';
+
+
+/*ch03,exl-7*/
+select bookname
+from book
+where not exists(
+	select bookname
+	from customer,orders
+	where customer,custid=orders.custid
+	and orders.bookid=book.bookid
+	and customer.name like 'ë°•ì§€ì„±');
