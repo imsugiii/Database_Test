@@ -1,32 +1,71 @@
-/*¸¶´ç¼­Á¡ µµ¼­ÀÇ ÃÑ¼ö*/
+/*ë§ˆë‹¹ì„œì  ë„ì„œì˜ ì´ìˆ˜*/
 Select count(*)
 from Book;
 
-/*¸¶´ç¼­Á¡¿¡ µµ¼­¸¦ Ãâ°íÇÏ´Â ÃâÆÇ»çÀÇ ÃÑ¼ö*/
+/*ë§ˆë‹¹ì„œì ì— ë„ì„œë¥¼ ì¶œê³ í•˜ëŠ” ì¶œíŒì‚¬ì˜ ì´ìˆ˜*/
 Select count(distinct publisher)
 from Book;
 
-/*¸ðµç °í°´ÀÇ ÀÌ¸§,ÁÖ¼Ò*/
+/*ëª¨ë“  ê³ ê°ì˜ ì´ë¦„,ì£¼ì†Œ*/
 Select name, address
 from Customer;
 
-/*2020³â7¿ù4ÀÏ~7¿ù7ÀÏ »çÀÌ¿¡ ÁÖ¹®¹ÞÀº µµ¼­ÀÇ ÁÖ¹®¹øÈ£*/
+/*2020ë…„7ì›”4ì¼~7ì›”7ì¼ ì‚¬ì´ì— ì£¼ë¬¸ë°›ì€ ë„ì„œì˜ ì£¼ë¬¸ë²ˆí˜¸*/
 Select orderid
 from Orders
 where orderdate between '2020-07-04' and '2020-07-07';
 
-/*2020³â7¿ù4ÀÏ~7¿ù9ÀÏ »çÀÌ¿¡ ÁÖ¹®¹ÞÀº µµ¼­¸¦ Á¦¿ÜÇÑ µµ¼­ÀÇ ÁÖ¹®¹øÈ£*/
+/*2020ë…„7ì›”4ì¼~7ì›”9ì¼ ì‚¬ì´ì— ì£¼ë¬¸ë°›ì€ ë„ì„œë¥¼ ì œì™¸í•œ ë„ì„œì˜ ì£¼ë¬¸ë²ˆí˜¸*/
 Select orderid
 from Orders
 where orderdate between '2020-07-04' and '2020-07-09';
 
-/*¼ºÀÌ *±è*¾¾ÀÎ °í°´ÀÇ ÀÌ¸§°ú ÁÖ¼Ò*/
+/*ì„±ì´ *ê¹€*ì”¨ì¸ ê³ ê°ì˜ ì´ë¦„ê³¼ ì£¼ì†Œ*/
 Select name, address
 from Customer
-where name like '±è';
+where name like 'ê¹€';
 
 
-/*¼ºÀÌ *±è*¾¾ÀÌ°í ÀÌ¸§ÀÌ *¾Æ*·Î ³¡³ª´Â °í°´ÀÇ ÀÌ¸§°ú ÁÖ¼Ò*/
+/*ì„±ì´ *ê¹€*ì”¨ì´ê³  ì´ë¦„ì´ *ì•„*ë¡œ ëë‚˜ëŠ” ê³ ê°ì˜ ì´ë¦„ê³¼ ì£¼ì†Œ*/
 Select name, address
 from Customer
-where name like '±è%¾Æ';
+where name like 'ê¹€%ì•„';
+
+/*ch03,ex2-8*/
+select name
+from customer
+where name not in(
+	select name
+	from customer, orders
+	where customer.custid=orders.custid);
+
+
+/*ch03,ex2-9*/
+select sum(salerprice).avg(saleprice)
+from orders;
+
+/*ch03,ex2-10*/
+select name, sum(saleprice) as total
+from customer, orders
+where customer.custid=orders.custid
+group by name;
+
+/*ch03,ex2-11*/
+select name, book.bookname
+from customer, orders, book
+where customer.custid=orders.custid
+	and orders.bookid=book.bookid;
+
+/*ch03,ex2-12*/
+select *
+from book,orders
+where book.bookid=orders.bookid and price-saleprice=(select max(price-saleprice)
+									from book, orders
+									where book.bookid=orders.bookid);
+
+/*ch03,ex2-13*/
+select name, avg(saleprice)
+from customer, orders
+where cutomer.custid=orders.custid
+group by name
+having avg(saleprice)> (select avg(saleprice) from orders);
